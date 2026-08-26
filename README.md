@@ -5,10 +5,18 @@
 ## 目录结构
 
 ```
-index.html      页面结构（每个工具一个 section.panel）
-css/style.css   样式与主题变量
-js/app.js       菜单渲染、hash 路由、各工具逻辑
+index.html            页面结构（每个工具一个 section.panel）
+css/style.css         样式与主题变量
+js/toolkit.js         全局命名空间与工具注册表
+js/util.js            公共函数：文本处理、剪贴板、轻提示
+js/panel.js           面板控制：按钮响应、输入输出、状态提示
+js/app.js             入口：菜单渲染、hash 路由、主题切换
+js/tools/json.js      JSON 格式化
+js/tools/xml.js       XML 格式化
+js/tools/mybatis.js   MyBatis 日志还原 SQL
 ```
+
+脚本用普通 `<script>` 按序加载，没有用 ES module —— `file://` 下 module 会被 CORS 拦掉，双击就打不开了。文件之间通过全局的 `Toolkit` 对象通信：`js/util.js` 往 `Toolkit.util` 挂公共函数，`js/panel.js` 挂 `Toolkit.Panel`，每个工具调 `Toolkit.register()` 把自己登记进去，`js/app.js` 只认注册表、不认识任何具体工具。
 
 ## 已有工具
 
@@ -36,8 +44,31 @@ js/app.js       菜单渲染、hash 路由、各工具逻辑
 
 ## 新增一个工具
 
-1. `js/app.js` 的 `TOOLS` 数组中追加一项：`{ id: 'base64', name: 'Base64', icon: '64', desc: '...' }`
-2. `index.html` 中复制一份 `<section class="panel" data-tool="base64" hidden>`，改掉 `data-tool`
-3. `js/app.js` 的 `HANDLERS` 中补上同名 key，实现 `format` / `minify` / `validate` / `highlight` 与 `sample`
+1. 新建 `js/tools/base64.js`，照着现有工具的骨架写：
 
-菜单和路由会自动生效，无需改动其它代码。
+```js
+(function (Toolkit) {
+  'use strict';
+
+  var escapeHtml = Toolkit.util.escapeHtml;
+
+  // 具体实现……
+
+  Toolkit.register({
+    id: 'base64',
+    name: 'Base64',
+    icon: '64',
+    desc: '编码与解码 Base64',
+    sample: SAMPLE,
+    format: function (text, options) { /* 返回字符串，或 { text, message, type } */ },
+    minify: function (text, options) { },
+    validate: function (text) { },
+    highlight: function (text) { return escapeHtml(text); }
+  });
+})(window.Toolkit);
+```
+
+2. `index.html` 中复制一份 `<section class="panel" data-tool="base64" hidden>`，改掉 `data-tool`，按需调整工具条按钮
+3. `index.html` 底部在 `js/app.js` 之前加一行 `<script src="js/tools/base64.js"></script>`
+
+菜单顺序就是脚本加载顺序，路由和面板绑定都会自动生效。工具条上的按钮通过 `data-action` 触发（`format` / `minify` / `validate` / `sample` / `clear` / `copy`），复选框的 `data-role` 会自动收进 `options` 传给处理函数。
