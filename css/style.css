@@ -1,0 +1,338 @@
+/* ---------- 主题变量 ---------- */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #fafbfc;
+  --border: #e3e6ea;
+  --text: #1f2328;
+  --text-weak: #6b7280;
+  --accent: #2563eb;
+  --accent-weak: #e8eefc;
+  --sidebar-bg: #1e2430;
+  --sidebar-text: #b7c0cd;
+  --ok: #128a4a;
+  --err: #c62828;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .04);
+  --code-key: #b5197c;
+  --code-str: #0a7c42;
+  --code-num: #b45309;
+  --code-bool: #7c3aed;
+  --code-tag: #2563eb;
+  --code-attr: #b45309;
+  --code-comment: #8a94a6;
+}
+
+html[data-theme="dark"] {
+  --bg: #14181f;
+  --surface: #1b212a;
+  --surface-2: #161c24;
+  --border: #2b333f;
+  --text: #e6e9ee;
+  --text-weak: #93a0b1;
+  --accent: #5b8cff;
+  --accent-weak: #23304d;
+  --sidebar-bg: #11151b;
+  --sidebar-text: #9aa6b5;
+  --ok: #4ade80;
+  --err: #ff7b72;
+  --shadow: none;
+  --code-key: #ff9ad2;
+  --code-str: #7ee2a8;
+  --code-num: #ffc46b;
+  --code-bool: #c4a7ff;
+  --code-tag: #7fb2ff;
+  --code-attr: #ffc46b;
+  --code-comment: #6d7887;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
+/* ---------- 整体布局 ---------- */
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---------- 左侧导航 ---------- */
+.sidebar {
+  width: 220px;
+  flex: 0 0 220px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 18px 16px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4f7cff, #7b5bff);
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.nav {
+  flex: 1;
+  padding: 6px 10px;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  color: inherit;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+.nav-item:hover { background: rgba(255, 255, 255, .06); color: #fff; }
+
+.nav-item.active { background: rgba(91, 140, 255, .18); color: #fff; }
+
+.nav-icon {
+  width: 22px;
+  font-family: "JetBrains Mono", Consolas, Monaco, monospace;
+  font-size: 12px;
+  text-align: center;
+  opacity: .85;
+}
+
+.sidebar-footer { padding: 12px 14px 16px; }
+
+.theme-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sidebar-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.theme-btn:hover { background: rgba(255, 255, 255, .06); color: #fff; }
+
+/* ---------- 右侧主区域 ---------- */
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-header {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.main-title { margin: 0; font-size: 18px; font-weight: 600; }
+
+.main-desc { margin: 2px 0 0; color: var(--text-weak); font-size: 13px; }
+
+.main-body {
+  flex: 1;
+  min-height: 0;
+  padding: 16px 24px 20px;
+  display: flex;
+}
+
+.panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel[hidden] { display: none; }
+
+/* ---------- 工具条 ---------- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toolbar-spacer { flex: 1; }
+
+.toolbar-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 2px;
+}
+
+.btn {
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover { filter: brightness(1.08); color: #fff; }
+
+.btn-ghost { background: transparent; color: var(--text-weak); }
+
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-weak);
+  font-size: 13px;
+}
+
+.field select {
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.field.checkbox { cursor: pointer; }
+
+/* ---------- 编辑区 ---------- */
+.editor {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.pane-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 12px;
+}
+
+.pane-title { font-weight: 600; }
+
+.pane-stat { color: var(--text-weak); }
+
+.input,
+.output {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 12px 14px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-family: "JetBrains Mono", Consolas, Monaco, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  tab-size: 2;
+  overflow: auto;
+  resize: none;
+  white-space: pre;
+}
+
+.pane.dragover { border-color: var(--accent); background: var(--accent-weak); }
+
+/* ---------- 状态栏 ---------- */
+.status {
+  min-height: 22px;
+  font-size: 13px;
+  color: var(--text-weak);
+}
+
+.status.ok { color: var(--ok); }
+
+.status.err { color: var(--err); }
+
+/* ---------- 语法高亮 ---------- */
+.tk-key { color: var(--code-key); }
+.tk-str { color: var(--code-str); }
+.tk-num { color: var(--code-num); }
+.tk-bool { color: var(--code-bool); }
+.tk-tag { color: var(--code-tag); }
+.tk-attr { color: var(--code-attr); }
+.tk-comment { color: var(--code-comment); font-style: italic; }
+
+/* ---------- 提示 ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  padding: 9px 18px;
+  border-radius: 8px;
+  background: rgba(31, 35, 40, .92);
+  color: #fff;
+  font-size: 13px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .18);
+  z-index: 99;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 900px) {
+  .layout { flex-direction: column; height: auto; }
+  .sidebar { width: 100%; flex: none; }
+  .nav { display: flex; flex-wrap: wrap; }
+  .sidebar-footer { padding-top: 0; }
+  .editor { grid-template-columns: 1fr; }
+  .input, .output { min-height: 260px; }
+}
