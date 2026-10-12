@@ -10,6 +10,7 @@ css/style.css         样式与主题变量
 js/toolkit.js         全局命名空间与工具注册表
 js/util.js            公共函数：文本处理、剪贴板、轻提示
 js/panel.js           面板控制：按钮响应、输入输出、状态提示
+js/splitter.js        分隔条：左右拖动调整输入/结果宽度
 js/app.js             入口：菜单渲染、hash 路由、主题切换
 js/tools/json.js      JSON 格式化
 js/tools/xml.js       XML 格式化
@@ -40,7 +41,7 @@ js/tools/mybatis.js   MyBatis 日志还原 SQL
   - 关键字统一大写，函数名与左括号紧贴（`COUNT(*)`），`IN (...)` / `VALUES (...)` 保留空格
   - `BETWEEN a AND b` 的 `AND` 不拆行；字符串字面量与注释内的内容原样保留
 
-通用能力：缩进可选（2 空格 / 4 空格 / Tab）、语法高亮、一键复制、拖拽文件到输入框、`Ctrl + Enter` 快捷格式化、深浅色主题切换（记忆在 localStorage）。
+通用能力：缩进可选（2 空格 / 4 空格 / Tab）、语法高亮、一键复制、拖拽文件到输入框、左右拖动分隔条调整输入/结果宽度（双击恢复 1:1）、`Ctrl + Enter` 快捷格式化、深浅色主题切换（记忆在 localStorage）。
 
 ## 新增一个工具
 

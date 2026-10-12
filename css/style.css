@@ -242,8 +242,37 @@ body {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: minmax(0, var(--split-l, 1fr)) 14px minmax(0, var(--split-r, 1fr));
+}
+
+/* 面板之间的可拖动分隔条 */
+.splitter {
+  position: relative;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.splitter::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: transparent;
+  transition: background .15s;
+}
+
+.splitter:hover::after,
+.splitter:focus-visible::after,
+.splitter.dragging::after { background: var(--accent); }
+
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
 }
 
 .pane {
@@ -333,6 +362,7 @@ body {
   .sidebar { width: 100%; flex: none; }
   .nav { display: flex; flex-wrap: wrap; }
   .sidebar-footer { padding-top: 0; }
-  .editor { grid-template-columns: 1fr; }
+  .editor { grid-template-columns: 1fr; gap: 14px; }
+  .splitter { display: none; }
   .input, .output { min-height: 260px; }
 }

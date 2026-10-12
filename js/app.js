@@ -78,6 +78,7 @@
   function init() {
     renderNav();
     initTheme();
+    Toolkit.initSplitter();
 
     document.querySelectorAll('.panel').forEach(function (root) {
       var id = root.getAttribute('data-tool');
