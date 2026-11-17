@@ -19,6 +19,14 @@ js/tools/mybatis.js   MyBatis 日志还原 SQL
 
 脚本用普通 `<script>` 按序加载，没有用 ES module —— `file://` 下 module 会被 CORS 拦掉，双击就打不开了。文件之间通过全局的 `Toolkit` 对象通信：`js/util.js` 往 `Toolkit.util` 挂公共函数，`js/panel.js` 挂 `Toolkit.Panel`，每个工具调 `Toolkit.register()` 把自己登记进去，`js/app.js` 只认注册表、不认识任何具体工具。
 
+## 打包成单个 HTML
+
+```bash
+node build.js
+```
+
+把 `index.html` 引用的本地 CSS、JS 全部内联，生成 `dist/toolkit.html`，单文件即可分发使用（需 Node.js，无其他依赖）。`dist/` 已加入 `.gitignore`。新增工具只要按下文在 `index.html` 加了 `<script>`，打包时会自动包含。
+
 ## 已有工具
 
 | 菜单        | hash       | 功能                                             |
