@@ -23,7 +23,7 @@ js/tools/mybatis.js   MyBatis 日志还原 SQL
 
 | 菜单        | hash       | 功能                                             |
 | ----------- | ---------- | ------------------------------------------------ |
-| JSON 格式化 | `#json`    | 格式化 / 压缩 / 校验，可选键名排序               |
+| JSON 格式化 | `#json`    | 格式化 / 压缩 / 校验，可选键名排序；结果带行号，对象/数组可折叠（Alt + 点击连同子级一起折叠/展开） |
 | XML 格式化  | `#xml`     | 格式化 / 压缩 / 校验，保留注释与 CDATA           |
 | MyBatis SQL | `#mybatis` | 把 `Preparing` / `Parameters` 日志还原成最终 SQL |
 
@@ -64,7 +64,9 @@ js/tools/mybatis.js   MyBatis 日志还原 SQL
     format: function (text, options) { /* 返回字符串，或 { text, message, type } */ },
     minify: function (text, options) { },
     validate: function (text) { },
-    highlight: function (text) { return escapeHtml(text); }
+    highlight: function (text) { return escapeHtml(text); },
+    // 可选：返回结果区的完整 HTML（如行号、折叠），提供后代替 highlight
+    render: function (text) { }
   });
 })(window.Toolkit);
 ```

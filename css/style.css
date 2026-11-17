@@ -319,6 +319,68 @@ body.resizing {
   white-space: pre;
 }
 
+/* ---------- 带行号、可折叠的结果 ---------- */
+.output:has(> .lined) { padding-left: 0; }
+
+.lined { min-width: max-content; }
+
+.ln { display: flex; }
+
+/* 行号栏横向滚动时固定在左侧，且不参与文本选择，复制时不会带上行号 */
+.ln-gutter {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  flex: none;
+  display: inline-flex;
+  margin-right: 10px;
+  padding-left: 6px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-weak);
+  user-select: none;
+}
+
+.ln-no {
+  width: calc(var(--ln-w, 2) * 1ch + 8px);
+  text-align: right;
+  opacity: .7;
+}
+
+.ln-fold {
+  width: 18px;
+  text-align: center;
+}
+
+.ln-fold[data-fold] {
+  cursor: pointer;
+  opacity: .55;
+}
+
+.ln-fold[data-fold]::before { content: "▾"; }
+
+.ln-fold[data-fold]:hover { opacity: 1; color: var(--accent); }
+
+.fold.collapsed > .ln:first-child .ln-fold::before { content: "▸"; }
+
+.fold.collapsed > .fold-body,
+.fold.collapsed > .ln:last-child { display: none; }
+
+.fold-ph { display: none; }
+
+.fold.collapsed > .ln:first-child .fold-ph { display: inline; }
+
+.fold-more {
+  margin: 0 4px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--accent-weak);
+  color: var(--accent);
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
 .pane.dragover { border-color: var(--accent); background: var(--accent-weak); }
 
 /* ---------- 状态栏 ---------- */

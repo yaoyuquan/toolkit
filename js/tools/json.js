@@ -56,6 +56,66 @@
     });
   }
 
+  /**
+   * 生成单行 HTML：行号 + 折叠按钮 + 高亮后的代码
+   */
+  function lineHtml(no, code, foldable, placeholder) {
+    return '<div class="ln">' +
+      '<span class="ln-gutter"><span class="ln-no">' + no + '</span>' +
+      '<span class="ln-fold"' + (foldable ? ' data-fold title="折叠 / 展开（Alt + 点击作用于全部子级）"' : '') + '></span></span>' +
+      '<span class="ln-code">' + highlightJson(code) + (placeholder || '') + '</span></div>';
+  }
+
+  /**
+   * 渲染带行号、可折叠的结果
+   * 依赖 JSON.stringify 的输出形态：以 { 或 [ 结尾的行开启一个块，单独的 } / ] 行（可带逗号）关闭它，
+   * 字符串值一定带引号，所以不会误判；空对象/空数组会输出成 {} / [] 单行，不产生折叠块
+   */
+  function renderJson(text) {
+    var lines = text.split('\n');
+    var html = [];
+    var stack = [];
+
+    lines.forEach(function (line, i) {
+      var no = i + 1;
+      var trimmed = line.trim();
+      var top = stack[stack.length - 1];
+
+      if (top && /^[\]}],?$/.test(trimmed)) {
+        stack.pop();
+        var unit = top.isArray ? ' 项' : ' 个字段';
+        var placeholder = '<span class="fold-ph"><span class="fold-more" data-fold title="展开">' +
+          top.count + unit + '</span>' + escapeHtml(trimmed) + '</span>';
+        html[top.index] = lineHtml(top.no, top.line, true, placeholder);
+        html.push('</div>', lineHtml(no, line, false), '</div>');
+        return;
+      }
+
+      // 当前行是父级块的一个直接成员
+      if (top) {
+        top.count++;
+      }
+
+      if (/[\[{]$/.test(trimmed)) {
+        html.push('<div class="fold">');
+        stack.push({ index: html.length, no: no, line: line, count: 0, isArray: trimmed.slice(-1) === '[' });
+        html.push('', '<div class="fold-body">');
+        return;
+      }
+
+      html.push(lineHtml(no, line, false));
+    });
+
+    // 理论上不会出现未闭合的块，兜底按普通行处理，保证结构完整
+    while (stack.length) {
+      var rest = stack.pop();
+      html[rest.index] = lineHtml(rest.no, rest.line, false);
+      html.push('</div></div>');
+    }
+
+    return '<div class="lined" style="--ln-w:' + String(lines.length).length + '">' + html.join('') + '</div>';
+  }
+
   Toolkit.register({
     id: 'json',
     name: 'JSON 格式化',
@@ -71,6 +131,7 @@
       return JSON.stringify(options.sortKeys ? sortObjectKeys(data) : data);
     },
     validate: parseJson,
-    highlight: highlightJson
+    highlight: highlightJson,
+    render: renderJson
   });
 })(window.Toolkit);

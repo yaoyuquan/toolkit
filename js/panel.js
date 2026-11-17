@@ -40,6 +40,19 @@
     var self = this;
 
     this.root.addEventListener('click', function (event) {
+      // 结果区的折叠按钮，Alt + 点击时子级块跟随同一状态
+      var toggle = event.target.closest('[data-fold]');
+      if (toggle) {
+        var block = toggle.closest('.fold');
+        var collapsed = block.classList.toggle('collapsed');
+        if (event.altKey) {
+          block.querySelectorAll('.fold').forEach(function (child) {
+            child.classList.toggle('collapsed', collapsed);
+          });
+        }
+        return;
+      }
+
       var button = event.target.closest('[data-action]');
       if (button) {
         self.run(button.getAttribute('data-action'));
@@ -150,7 +163,8 @@
       var text = isPlain ? result : result.text;
       var fallback = action === 'minify' ? '✓ 压缩完成' : '✓ 格式化完成';
 
-      this.setResult(text, this.handlers.highlight(text));
+      // 工具提供 render 时用它生成带行号等结构的结果，否则只做语法高亮
+      this.setResult(text, this.handlers.render ? this.handlers.render(text) : this.handlers.highlight(text));
       this.setStatus(isPlain ? fallback : (result.message || fallback), isPlain ? 'ok' : (result.type || 'ok'));
     } catch (e) {
       this.setResult('', '');
